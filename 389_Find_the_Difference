@@ -1,0 +1,11 @@
+class Solution {
+public:
+    char findTheDifference(string s, string t) {
+        unordered_map<char, int> hashmap;
+        for (char a : s) hashmap[a]++;
+        for (char b : t) hashmap[b]--;
+        for (auto it : hashmap){
+            if (it.second == -1) return it.first;
+        }
+    }
+};

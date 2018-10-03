@@ -1,0 +1,27 @@
+class Solution {
+private:
+    int line_rob(vector<int> nums){
+        if (nums.size() == 0) return 0;
+        if (nums.size() == 1) return nums[0];
+        if (nums.size() == 2) return max(nums[0], nums[1]);
+        nums[2] = nums[0] + nums[2];
+        for (int i = 3; i < nums.size(); ++i){
+            nums[i] = max(nums[i - 2], nums[i - 3]) + nums[i];
+        }
+        return max(nums[nums.size() - 1], nums[nums.size() - 2]);
+    }
+public:
+    int rob(vector<int>& nums) {
+        if (nums.size() == 0) return 0;
+        if (nums.size() == 1) return nums[0];
+        if (nums.size() == 2) return max(nums[0], nums[1]);
+        // now nums.size >= 3
+        if (nums.size() == 3) return max(nums[0], max(nums[1], nums[2]));
+        if (nums.size() == 4) return max(nums[0] + nums[2], nums[1] + nums[3]);
+        // now nums.size >= 5
+        // two situations:
+        // 1. break room 0, line_rob 2 to n - 2
+        // 2. don't break room 0, line_rob 1 to n
+        return max(nums[0] + line_rob(vector<int>(nums.begin() + 2, nums.end() - 1)), line_rob(vector<int>(nums.begin() + 1, nums.end())));
+    }
+};

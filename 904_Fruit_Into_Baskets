@@ -1,0 +1,30 @@
+class Solution {
+public:
+    int totalFruit(vector<int>& tree) {
+        int max_number = 0;
+        int first, second;
+        for (int i = 0; i < tree.size(); ++i){
+            int count = 0;
+            first = tree[i];
+            second = -1;
+            for (int j = i; j < tree.size(); ++j){
+                if (tree[j] == first){
+                    count++;
+                    continue;
+                }
+                if (second == -1 && tree[j] != first){
+                    second = tree[j];
+                    count++;
+                    continue;
+                }
+                if (tree[j] == second){
+                    count++;
+                    continue;
+                }
+                if (tree[j] != second && tree[j] != first) break;
+            }
+            max_number = max(max_number, count);
+        }
+        return max_number;
+    }
+};

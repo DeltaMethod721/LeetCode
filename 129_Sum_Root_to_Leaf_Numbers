@@ -1,0 +1,38 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+private:
+    void helper(TreeNode* node, string current, vector<int>& result){
+        // first add val to current
+        current = current + to_string(node->val);
+        // check if this is the end
+        if (node->left == NULL && node->right == NULL){
+            // string to integer and store
+            result.push_back(stoi(current));
+        }
+        // if not end
+        if (node->left != NULL)
+            helper(node->left, current, result);
+        if (node->right != NULL)
+            helper(node->right, current, result);
+        return;
+    }
+public:
+    int sumNumbers(TreeNode* root) {
+        if (root == NULL) return 0;
+        vector<int> result;
+        string current;
+        helper(root, current, result);
+        int temp = 0;
+        for (int i = 0; i < result.size(); ++i)
+            temp += result[i];
+        return temp;
+    }
+};

@@ -1,0 +1,45 @@
+DFS somehow wrong, no idea
+class Solution {
+private: 
+    vector<int> money;
+    void dfs(vector<int> nums, int break_num, int current_money){
+        current_money += nums[break_num];
+        if (break_num >= nums.size() - 2){
+            money.push_back(current_money);
+        }else{
+            for (int i = break_num + 2; i < nums.size(); ++i){
+                dfs(nums, i, current_money);
+            }
+        }
+        return;
+    }
+public:
+    int rob(vector<int>& nums) {
+        if (nums.size() == 0) return 0;
+        if (nums.size() == 1) return nums[0];
+        if (nums.size() == 2) return max(nums[1], nums[0]);
+        dfs(nums, 0, 0);
+        dfs(nums, 1, 0);
+        int result = 0;
+        for (int i = 0; i < nums.size(); ++i){
+            result = max(result, money[i]);
+        }
+        return result;
+    }
+};
+
+DP
+
+class Solution {
+public:
+    int rob(vector<int>& nums) {
+        if (nums.size() == 0) return 0;
+        if (nums.size() == 1) return nums[0];
+        if (nums.size() == 2) return max(nums[0], nums[1]);
+        nums[2] = nums[0] + nums[2];
+        for (int i = 3; i < nums.size(); ++i){
+            nums[i] = max(nums[i - 2], nums[i - 3]) + nums[i];
+        }
+        return max(nums[nums.size() - 1], nums[nums.size() - 2]);
+    }
+};

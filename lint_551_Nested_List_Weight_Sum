@@ -1,0 +1,28 @@
+DFS
+335ms
+class Solution {
+private:
+    int total;
+    void DFS(NestedInteger list, int depth){
+        // check if this list is integer
+        if (list.isInteger()){
+            total += list.getInteger() * depth;
+        }else{
+            vector<NestedInteger> next_round = list.getList();
+            for (int i = 0; i < next_round.size(); ++i){
+                DFS(next_round[i], depth + 1);
+            }
+        }
+        return;
+    }
+public:
+    int depthSum(const vector<NestedInteger>& nestedList) {
+        total = 0;
+        for (int i = 0; i < nestedList.size(); ++i){
+            DFS(nestedList[i], 1);
+        }
+        return total;
+    }
+};
+
+

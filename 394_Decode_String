@@ -1,0 +1,36 @@
+class Solution {
+public:
+    string decodeString(string s) {
+        stack<string> s1;
+        for (int i = 0; i < s.size(); ++i){
+            if (s[i] != ']'){
+                s1.push(s.substr(i, 1));
+            }else{
+                string tmp;
+                while (s1.top() != "["){
+                    tmp = s1.top() + tmp;
+                    s1.pop();
+                }
+                s1.pop(); // get rid of '['
+                // decide how many times need to be repeated
+                string nbr;
+                while (!s1.empty() && s1.top()[0] - '0' <= 9 && s1.top()[0] - '0' >= 0){
+                    nbr = s1.top() + nbr;
+                    s1.pop();
+                }
+                cout << nbr << endl;
+                string tmp_rep;
+                for (int i = 0; i < stoi(nbr); ++i){
+                    tmp_rep += tmp;
+                }
+                s1.push(tmp_rep);
+            }
+        }
+        string result;
+        while (!s1.empty()){
+            result = s1.top() + result;
+            s1.pop();
+        }
+        return result;
+    }
+};

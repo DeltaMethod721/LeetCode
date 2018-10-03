@@ -1,0 +1,26 @@
+class Solution {
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        unordered_map<int, int> hashmap;
+        for (int i = 0; i < nums.size(); ++i){
+            if (hashmap.find(nums[i]) == hashmap.end()) hashmap.insert(make_pair(nums[i], 1));
+            else hashmap[nums[i]]++;
+        }
+        priority_queue<int> q;
+        for (auto it = hashmap.begin(); it != hashmap.end(); ++it){
+            q.push(it->second);
+        }
+        vector<int> result;
+        for (int i = 0; i < k; ++i){
+            int num = q.top(); q.pop();
+            for (auto it = hashmap.begin(); it != hashmap.end(); ++it){
+                if (it->second == num){
+                    result.push_back(it->first);
+                    it->second = -1;
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+};

@@ -1,0 +1,59 @@
+class Solution {
+private:
+    void helper(vector<vector<int>>& result, vector<int> current, int start, int temp_mul, int n){
+        for (int i = start; i <= (int)(n / 2); ++i){
+            if (temp_mul % i == 0){
+                current.push_back(i);
+                if (temp_mul == i){
+                    result.push_back(current);
+                }else{
+                    helper(result, current, i, temp_mul / i, n);
+                }
+                current.pop_back();
+            }
+        }
+    }
+public:
+    /**
+     * @param n: a integer
+     * @return: return a 2D array
+     */
+    vector<vector<int>> getFactors(int n) {
+        // write your code here
+        vector<vector<int>> result;
+        if (n <= 1) return result;
+        vector<int> current;
+        helper(result, current, 2, n, n);
+        return result;
+    }
+};
+
+
+class Solution {
+private:
+    void helper(vector<vector<int>>& result, vector<int> current, int start, int temp_mul, int n){
+        for (int i = start; i <= (int)(pow(temp_mul, 0.5)); ++i){
+            if (temp_mul % i == 0){
+                current.push_back(i);
+                vector<int> temp = current;
+                temp.push_back(temp_mul / i);
+                result.push_back(temp);
+                helper(result, current, i, temp_mul / i, n);
+                current.pop_back();
+            }
+        }
+    }
+public:
+    /**
+     * @param n: a integer
+     * @return: return a 2D array
+     */
+    vector<vector<int>> getFactors(int n) {
+        // write your code here
+        vector<vector<int>> result;
+        if (n <= 1) return result;
+        vector<int> current;
+        helper(result, current, 2, n, n);
+        return result;
+    }
+};

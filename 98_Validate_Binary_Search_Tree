@@ -1,0 +1,46 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+private:
+    bool indi = true;
+    vector<int> range(TreeNode* node){
+        vector<int> temp_right, temp_left, result (2, 0);
+        if (node->left == NULL & node->right != NULL){
+            temp_right = range(node->right);
+            if (node->val >= temp_right[0]) indi = false;
+            result[0] = min(node->val, temp_right[0]);
+            result[1] = max(node->val, temp_right[1]);
+        }
+        if (node->left != NULL & node->right == NULL){
+            temp_left = range(node->left);
+            if (node->val <= temp_left[1]) indi = false;
+            result[0] = min(node->val, temp_left[0]);
+            result[1] = max(node->val, temp_left[1]);
+        }
+        if (node->left == NULL & node->right == NULL){
+            result[0] = node->val;
+            result[1] = node->val;
+        }
+        if (node->left != NULL & node->right != NULL){
+            temp_right = range(node->right);
+            temp_left = range(node->left);
+            if (node->val >= temp_right[0] || node->val <= temp_left[1]) indi = false;
+            result[0] = min(min(node->val, temp_right[0]), temp_left[0]);
+            result[1] = max(max(node->val, temp_right[1]), temp_right[1]);
+        }
+        return result;
+    }
+public:
+    bool isValidBST(TreeNode* root) {
+        if (root == NULL) return true;
+        vector<int> trash = range(root);
+        return indi;
+    }
+};

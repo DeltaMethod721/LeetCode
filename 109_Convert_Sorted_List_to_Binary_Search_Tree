@@ -1,0 +1,61 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+private:
+    vector<ListNode*> getMedian(ListNode* head){
+        vector<ListNode*> res;
+        if (head->next == NULL || head->next->next == NULL){
+            res.push_back(head);
+            return res;
+        }
+        ListNode* slow = head, *fast = head, *previous;
+        while (fast->next != NULL && fast->next->next != NULL){
+            previous = slow;
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        vector<ListNode*> result;
+        result.push_back(previous); result.push_back(slow);
+        cout << "Median is " << result[1]->val << endl;
+        return result;
+    }
+    TreeNode* getTree(ListNode* start){
+        // find median
+        if (start == NULL) return NULL;
+        if (start->next == NULL){
+            return new TreeNode(start->val);
+        }
+        if (start->next->next == NULL){
+            TreeNode* a = new TreeNode (start->val);
+            TreeNode* b = new TreeNode (start->next->val);
+            a->right = b;
+            return a;
+        }
+        vector<ListNode*> median = getMedian(start);
+        median[0]->next = NULL;
+        TreeNode* current = new TreeNode (median[1]->val);
+        current->left = getTree(start);
+        current->right = getTree(median[1]->next);
+        return current;
+    }
+public:
+    TreeNode* sortedListToBST(ListNode* head) {
+        if (head == NULL) return NULL;
+        return getTree(head);
+    }
+};

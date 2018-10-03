@@ -1,0 +1,24 @@
+class Solution {
+private:
+    vector<string> dict = {"abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+    void helper(vector<string>& result, string current, int start, string digits){
+        if (start == current.size()){
+            result.push_back(current);
+            return;
+        }
+        int num = digits[start] - '2';
+        for (int i = 0; i < dict[num].size(); ++i){
+            current[start] = dict[num][i];
+            helper(result, current, start + 1, digits);
+        }
+        return;
+    }
+public:
+    vector<string> letterCombinations(string digits) {
+        vector<string> result;
+        if (digits.empty()) return result;
+        string current (digits.size(), 0);
+        helper(result, current, 0, digits);
+        return result;
+    }
+};

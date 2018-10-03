@@ -1,0 +1,259 @@
+Exceed time limit
+class Solution {
+private:
+    int checkneighbor(string word1, string word2){
+        int count = 0;
+        for (int i = 0; i < word1.size(); ++i){
+            if (word1[i] != word2[i]) count++;
+        }
+        return count == 1 ? 1 : 0;
+    }
+    // vector<vector<int>> distmat(string beginWord, string endWord, vector<string> wordList){
+    //     // assme begin and end word are not in wordList
+    //     wordList.push_back(beginWord);
+    //     wordList.push_back(endWord);
+    //     vector<vector<int>> result;
+    //     vector<int> temp;
+    //     temp.resize(wordList.size());
+    //     result.resize(wordList.size(), temp);
+    //     for (int i = 0; i < wordList.size(); ++i){
+    //         for (int j = i + 1; j < wordList.size(); ++j){
+    //             result[i][j] = checkneighbor(wordList[i], wordList[j]);
+    //             result[j][i] = result[i][j];
+    //         }
+    //     }
+    //     return result;
+    // }
+    int BFS(string begin, string end, vector<string> wordList){
+        int tempcheck = 0;
+        for (int i = 0; i < wordList.size(); ++i){
+            if (wordList[i] == end) tempcheck++;
+        }
+        if (tempcheck == 0) return 0;
+        unordered_set<string> visited;
+        queue<string> q;
+        q.push(begin);
+        int count = 0;
+        string current;
+        while (!q.empty()){
+            int size = q.size();
+            for (int i = 0; i < size; ++i){
+                // take an element from queue
+                current = q.front();
+                q.pop();
+                
+                // check if it can be transfered to end
+                if (checkneighbor(current, end) == 1) return count + 2;
+                // otherwise, check it's neighbors:
+                // first add to visited
+                visited.insert(current);
+                // check neighbors:
+                for (int i = 0; i < wordList.size(); ++i){
+                    if (visited.count(wordList[i]) == 0 && checkneighbor(wordList[i], current) == 1) q.push(wordList[i]);
+                }
+            }
+            // add depth
+            count++;
+        }
+        return 0;
+    }
+public:
+    int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
+        return BFS(beginWord, endWord, wordList);
+    }
+};
+
+Exceed time limit again
+class Solution {
+private:
+    int checkneighbor(string word1, string word2){
+        int count = 0;
+        for (int i = 0; i < word1.size(); ++i){
+            if (word1[i] != word2[i]) count++;
+        }
+        return count == 1 ? 1 : 0;
+    }
+    vector<vector<int>> distmat(string beginWord, vector<string> wordList){
+        // assme begin and end word are not in wordList
+        wordList.push_back(beginWord);
+        vector<vector<int>> result;
+        vector<int> temp;
+        temp.resize(wordList.size());
+        result.resize(wordList.size(), temp);
+        for (int i = 0; i < wordList.size(); ++i){
+            for (int j = i + 1; j < wordList.size(); ++j){
+                result[i][j] = checkneighbor(wordList[i], wordList[j]);
+                result[j][i] = result[i][j];
+            }
+        }
+        return result;
+    }
+    int BFS(string begin, string end, vector<string> wordList){
+        int tempcheck = -1;
+        for (int i = 0; i < wordList.size(); ++i){
+            if (wordList[i] == end){
+                tempcheck = i;
+                break;
+            }
+        }
+        if (tempcheck == -1) return 0;
+        
+        // get distance matrix, last one is begin, tempcheck is end
+        vector<vector<int>> dist = distmat(begin, wordList);
+        unordered_set<int> visited;
+        queue<int> q;
+        q.push(dist.size() - 1);
+        int count = 0;
+        int current;
+        while (!q.empty()){
+            int size = q.size();
+            for (int i = 0; i < size; ++i){
+                // take an element from queue
+                current = q.front();
+                q.pop();
+                
+                // check if it can be transfered to end
+                if (dist[current][tempcheck] == 1) return count + 2;
+                // otherwise, check it's neighbors:
+                // first add to visited
+                visited.insert(current);
+                // check neighbors:
+                for (int i = 0; i < wordList.size(); ++i){
+                    if (visited.count(i) == 0 && dist[i][current] == 1) q.push(i);
+                }
+            }
+            // add depth
+            count++;
+        }
+        return 0;
+    }
+public:
+    int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
+        return BFS(beginWord, endWord, wordList);
+    }
+};
+
+Two End
+Exceeds time limit
+class Solution {
+private:
+    int checkdist(string word1, string word2){
+        int len = word1.size();
+        int count = 0;
+        for (int i = 0; i < len; ++i){
+            if (word1[i] != word2[i]) count++;
+        }
+        return count == 1 ? 1 : 0;
+    }
+public:
+    int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
+        int check = 0;
+        for (int i = 0; i < wordList.size(); ++i){
+            if (wordList[i] == endWord){
+                check++;
+                break;
+            }
+        }
+        if (check == 0) return 0;
+        queue<string> q_start, q_end, q_swap;
+        unordered_set<string> visited, hash_begin, hash_end, hash_swap;
+        // initialize
+        q_start.push(beginWord);
+        q_end.push(endWord);
+        hash_begin.insert(beginWord);
+        hash_end.insert(endWord);
+        int count = 0;
+        string current;
+        while (!q_start.empty()){
+            int size = q_start.size();
+            for (int i = 0; i < size; ++i){
+                // get one element
+                current = q_start.front();
+                q_start.pop();
+                // check if current is in hash_end, if so, return count
+                if (hash_end.count(current) != 0) return count + 1;
+                // otherwise, this is not the end
+                // update the hash set
+                visited.insert(current);
+                hash_begin.erase(current);
+                // check neighbors
+                for (int j = 0; j < wordList.size(); ++j){
+                    if (checkdist(current, wordList[j]) == 1 && visited.count(wordList[j]) == 0){
+                        q_start.push(wordList[j]);
+                        hash_begin.insert(wordList[j]);
+                    }
+                }
+            }
+            count++;
+            // swap
+            hash_swap = hash_end;
+            hash_end = hash_begin;
+            hash_begin = hash_swap;
+            
+            q_swap = q_end;
+            q_end = q_start;
+            q_start = q_swap;
+            
+        }
+        return 0;
+    }
+};
+
+class Solution {
+private:
+    void addNeighbor(string current, queue<string> &q, unordered_set<string> &hash1, unordered_set<string> visited,
+                    unordered_set<string> wordDict){
+        for (int i = 0; i < current.size(); ++i){
+            char temp = current[i];
+            for (int k = 0; k < 26; ++k){
+                current[i] = 'a' + k;
+                if (wordDict.count(current) != 0 && visited.count(current) == 0){
+                    q.push(current);
+                    hash1.insert(current);
+                }
+            }
+            current[i] = temp;
+        }
+    }
+public:
+    int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
+        unordered_set<string> wordDict (wordList.begin(), wordList.end());
+        if (wordDict.count(endWord) == 0) return 0;
+        queue<string> q_start, q_end, q_swap;
+        unordered_set<string> visited, hash_begin, hash_end, hash_swap;
+        // initialize
+        q_start.push(beginWord);
+        q_end.push(endWord);
+        hash_begin.insert(beginWord);
+        hash_end.insert(endWord);
+        int count = 0;
+        string current;
+        while (!q_start.empty()){
+            int size = q_start.size();
+            for (int i = 0; i < size; ++i){
+                // get one element
+                current = q_start.front();
+                q_start.pop();
+                // check if current is in hash_end, if so, return count
+                if (hash_end.count(current) != 0) return count + 1;
+                // otherwise, this is not the end
+                // update the hash set
+                visited.insert(current);
+                hash_begin.erase(current);
+                // check neighbors
+                addNeighbor(current, q_start, hash_begin, visited, wordDict);
+            }
+            count++;
+            // swap
+            hash_swap = hash_end;
+            hash_end = hash_begin;
+            hash_begin = hash_swap;
+            
+            q_swap = q_end;
+            q_end = q_start;
+            q_start = q_swap;
+            
+        }
+        return 0;
+    }
+};

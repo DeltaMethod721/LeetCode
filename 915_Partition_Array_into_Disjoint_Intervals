@@ -1,0 +1,17 @@
+class Solution {
+public:
+    int partitionDisjoint(vector<int>& A) {
+        vector<int> dp1(A.size() - 1, 0), dp2(A.size() - 1, 0);
+        dp1[0] = A[0];
+        dp2[A.size() - 2] = A[A.size() - 1];
+        for (int i = 1; i < A.size() - 1; ++i){
+            // left max
+            dp1[i] = max(dp1[i - 1], A[i]);
+            // right min
+            dp2[A.size() - 2 - i] = min(dp2[A.size() - 1 - i], A[A.size() - 1 - i]);
+        }
+        for (int i = 0; i < dp1.size(); ++i){
+            if (dp1[i] <= dp2[i]) return i + 1;
+        }
+    }
+};

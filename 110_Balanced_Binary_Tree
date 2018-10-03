@@ -1,0 +1,56 @@
+Brute Force
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+private:
+    int getDepth(TreeNode* node){
+        if (node == NULL) return 0;
+        return max(getDepth(node->left), getDepth(node->right)) + 1;
+    }
+    bool helper(TreeNode* node){
+        if (node == NULL) return true;
+        int left1 = getDepth(node->left);
+        int right1 = getDepth(node->right);
+        return abs(right1 - left1) <= 1 && helper(node->left) && helper(node->right);
+    }
+public:
+    bool isBalanced(TreeNode* root) {
+        if (root == NULL) return true;
+        return helper(root);
+    }
+};
+
+Calculate depth + checking
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+private:
+    bool result = true;
+    int getDepth(TreeNode* node){
+        if (node == NULL) return 0;
+        int left1 = getDepth(node->left);
+        int right1 = getDepth(node->right);
+        if (abs(left1 - right1) > 1) result = false;
+        return max(left1, right1) + 1;
+    }
+public:
+    bool isBalanced(TreeNode* root) {
+        if (root == NULL) return true;
+        int trash = getDepth(root);
+        return result;
+    }
+};

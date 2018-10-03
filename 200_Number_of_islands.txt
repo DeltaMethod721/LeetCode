@@ -1,0 +1,142 @@
+BFS: (no hash)
+8ms 98.7%
+class Solution {
+public:
+    void BFS(vector<vector<char>> &grid, int x, int y){
+        int n_rows = grid.size();
+        int n_cols = grid[0].size();
+        queue<vector<int>> q;
+        q.push({x, y});
+        vector<int> temp, check;
+        while (!q.empty()){
+            int size = q.size();
+            for (int i = 0; i < size; ++i){
+                // take a location
+                temp = q.front();
+                q.pop();
+                // check neighbors
+                if (temp[0] >= 1){
+                    if (grid[temp[0] - 1][temp[1]] == '1'){
+                        grid[temp[0] - 1][temp[1]] = '0';
+                        q.push({temp[0] - 1, temp[1]});
+                    }
+                }
+                if (temp[0] <= n_rows - 2){
+                    if (grid[temp[0] + 1][temp[1]] == '1'){
+                        grid[temp[0] + 1][temp[1]] = '0';
+                        q.push({temp[0] + 1, temp[1]});
+                    }
+                }
+                if (temp[1] >= 1){
+                    if (grid[temp[0]][temp[1] - 1] == '1'){
+                        grid[temp[0]][temp[1] - 1] = '0';
+                        q.push({temp[0], temp[1] - 1});
+                    }
+                }
+                if (temp[1] <= n_cols - 2){
+                    if (grid[temp[0]][temp[1] + 1] == '1'){
+                        grid[temp[0]][temp[1] + 1] = '0';
+                        q.push({temp[0], temp[1] + 1});
+                    }
+                }
+            }
+        }
+        return;
+    }
+    int numIslands(vector<vector<char>> &grid){
+        if (grid.empty()) return 0;
+        int count = 0;
+        int n_rows = grid.size();
+        int n_cols = grid[0].size();
+        for (int i = 0; i < n_rows; ++i){
+            for (int j = 0; j < n_cols; ++j){
+                if (grid[i][j] == '1'){
+                    count++;
+                    BFS(grid, i, j);
+                }
+            }
+        }
+        return count;
+    }
+};
+
+DFS (recursive)
+8ms
+class Solution {
+public:
+    void DFS(vector<vector<char>> &grid, int x, int y){
+        if (x < 0 || y < 0 || x >= grid.size() || y >= grid[0].size()) return;
+        if (grid[x][y] == '1'){
+            grid[x][y] = '0';
+            DFS(grid, x - 1, y);
+            DFS(grid, x + 1, y);
+            DFS(grid, x, y - 1);
+            DFS(grid, x, y + 1);
+        }
+        return;
+    }
+    int numIslands(vector<vector<char>> &grid){
+        int count = 0;
+        for (int i = 0; i < grid.size(); ++i){
+            for (int j = 0; j < grid[0].size(); ++j){
+                if (grid[i][j] == '1'){
+                    count++;
+                    DFS(grid, i, j);
+                }
+            }
+        }
+        return count;
+    }
+};
+
+DFS (loop)
+16ms why?
+class Solution {
+public:
+    void DFS(vector<vector<char>> &grid, int x, int y){
+        stack<vector<int>> s;
+        // initialize
+        s.push({x, y});
+        vector<int> current;
+        while (!s.empty()){
+            // take an element
+            current = s.top(); s.pop();
+            grid[current[0]][current[1]] = '0';
+            // check neighbors
+            if (current[0] >= 1){
+                if (grid[current[0] - 1][current[1]] == '1'){
+                    s.push({current[0] - 1, current[1]});
+                }
+            }
+            if (current[1] >= 1){
+                if (grid[current[0]][current[1] - 1] == '1'){
+                    s.push({current[0], current[1] - 1});
+                }
+            }
+            if (current[0] + 2 <= grid.size()){
+                if (grid[current[0] + 1][current[1]] == '1'){
+                    s.push({current[0] + 1, current[1]});
+                }
+            }
+            if (current[1] + 2 <= grid[0].size()){
+                if (grid[current[0]][current[1] + 1] == '1'){
+                    s.push({current[0], current[1] + 1});
+                }
+            }
+        }
+        return;
+    }
+    int numIslands(vector<vector<char>> &grid){
+        if (grid.empty()) return 0;
+        int count = 0;
+        for (int i = 0; i < grid.size(); ++i){
+            for (int j = 0; j < grid[0].size(); ++j){
+                if (grid[i][j] == '1'){
+                    count++;
+                    DFS(grid, i, j);
+                }
+            }
+        }
+        return count;
+    }
+};

@@ -1,0 +1,114 @@
+DFS Backtracking:
+memory limit exceeded
+class Solution {
+private: 
+    void helper(vector<vector<int>>& result, vector<int> current, vector<int> nums, int target){
+        for (int i = 0; i < nums.size(); ++i){
+            if (target == nums[i]){
+                current.push_back(nums[i]);
+                result.push_back(current);
+            }else if (target > nums[i]){
+                current.push_back(nums[i]);
+                helper(result, current, nums, target - nums[i]);
+            }
+        }
+    }
+public:
+    int combinationSum4(vector<int>& nums, int target) {
+        vector<vector<int>> result;
+        if (nums.empty()) return 0;
+        vector<int> current;
+        helper(result, current, nums, target);
+        return result.size();
+    }
+};
+
+BFS
+class Solution {
+public:
+    int combinationSum4(vector<int>& nums, int target) {
+        queue<int> q;
+        q.push(0);
+        int current, count = 0;
+        while (!q.empty()){
+            // take an element
+            current = q.front();
+            q.pop();
+            // try to add numbers
+            for (int i = 0; i < nums.size(); ++i){
+                if (target == current + nums[i]){
+                    count++;
+                }else if (target > current + nums[i]){
+                    q.push(current + nums[i]);
+                }
+            }
+        }
+        return count;
+    }
+};
+
+recursion
+class Solution {
+private:
+    int helper(vector<int>& nums, int target){
+        // cout << target << endl;
+        if (target == 0) return 1;
+        if (target < 0) return 0;
+        int result = 0;
+        for (int i = 0; i < nums.size(); ++i){
+            // cout << "loop " << i << " next target " << target - nums[i] << endl;
+            result += helper(nums, target - nums[i]);
+        }
+        return result;
+    }
+public:
+    int combinationSum4(vector<int>& nums, int target) {
+        if (target == 0) return 0;
+        sort(nums.begin(), nums.end());
+        return helper(nums, target);
+    }
+};
+
+DP I
+class Solution {
+public:
+    int combinationSum4(vector<int>& nums, int target) {
+        vector<int> dp (target);
+        for (int i = 0; i < target; ++i){
+            for (int j = 0; j < nums.size(); ++j){
+                if (i + 1 - nums[j] == 0) dp[i]++;
+                if (i + 1 - nums[j] > 0) dp[i] += dp[i + 1 - nums[j] - 1];
+            }
+            cout << dp[i] << endl;
+        }
+        return dp.back();
+    }
+};
+
+Finally......
+100%
+class Solution {
+private:
+    int helper(vector<int>& nums, int target, vector<int>& dp){
+        // cout << target << endl;
+        int result = 0;
+        for (int i = 0; i < nums.size(); ++i){
+            if (0 <= target - nums[i]){
+                if (dp[target - nums[i]] == -1){
+                    int temp = helper(nums, target - nums[i], dp);
+                    dp[target - nums[i]] = temp;
+                }
+                result += dp[target - nums[i]];
+            } 
+        }
+        return result;
+    }
+public:
+    int combinationSum4(vector<int>& nums, int target) {
+        vector<int> dp(target + 1, -1);
+        dp[0] = 1;
+        if (target == 0) return 0;
+        sort(nums.begin(), nums.end());
+        return helper(nums, target, dp);
+    }
+};

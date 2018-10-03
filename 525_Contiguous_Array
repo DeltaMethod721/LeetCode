@@ -1,0 +1,31 @@
+class Solution {
+public:
+    int findMaxLength(vector<int>& nums) {
+        int current_sum = 0, result = 0;
+        for (int start = 0; start < nums.size(); ++start){
+            current_sum = 0;
+            for (int end = start; end < nums.size(); ++end){
+                current_sum += nums[end] * 2;
+                if (end - start + 1 == current_sum) result = max(current_sum, result);
+            }
+        }
+        return result;
+    }
+};
+
+class Solution {
+public:
+    int findMaxLength(vector<int>& nums) {
+        int count = 0, maxlength = 0;
+        unordered_map<int, int> hashmap;
+        hashmap.insert(make_pair(0, -1));
+        for (int i = 0; i < nums.size(); ++i){
+            count += (nums[i] == 1) ? 1 : -1;
+            if (hashmap.count(count) == 0) 
+                hashmap.insert(make_pair(count, i));
+            else
+                maxlength = max(maxlength, i - hashmap[count]);
+        }
+        return maxlength;
+    }
+};

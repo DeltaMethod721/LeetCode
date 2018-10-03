@@ -1,0 +1,22 @@
+class Solution {
+public:
+    int lengthLongestPath(string input) {
+        vector<int> s(256, 0);
+        stringstream ss(input);
+        int max_path = 0;
+        string tmp;
+        int n_tab;
+        while (getline(ss, tmp, '\n')){
+            if (tmp.find_last_of('\t') == string::npos){
+                n_tab = 0;
+                s[0] = tmp.size(); 
+            } 
+            else{
+                n_tab = tmp.find_last_of('\t') + 1;
+                s[n_tab] = s[n_tab - 1] + tmp.size() - n_tab + 1; // cout 1 more slash
+            }
+            if (tmp.find('.') != string::npos) max_path = max(max_path, s[n_tab]);
+        }
+        return max_path;
+    }
+};

@@ -1,0 +1,27 @@
+Backtracking
+class Solution {
+private:
+    void helper(int &total, unordered_set<int> &hashset, int N, int start){
+        if (start == N + 1){
+            total++;
+            return;
+        }
+        for (int i = 1; i <= N; ++i){
+            // try to add a number
+            if (hashset.count(i) == 0){
+                if (i % start == 0 || start % i == 0){
+                    hashset.insert(i);
+                    helper(total, hashset, N, start + 1);
+                    hashset.erase(i);
+                }
+            }
+        }
+    }
+public:
+    int countArrangement(int N) {
+        int total = 0, start = 1;
+        unordered_set<int> hashset;
+        helper(total, hashset, N, start);
+        return total;
+    }
+};

@@ -1,0 +1,25 @@
+class Solution {
+private:
+    void backtrack(string city, vector<string> current, vector<pair<string, string>> remain, priority_queue<vector<string>> &result){
+        if (current.size() == remain.size()){
+            current.push_back(city);
+            result.push(current);
+        }
+        for (int i = 0; i < remain.size(); ++i){
+            if (remain[i].first == city){
+                current.push_back(city);
+                vector<pair<string, string>> temp = remain;
+                temp[i].first = "";
+                backtrack(remain[i].second, current, temp, result);
+                current.pop_back();
+            }
+        }
+    }
+public:
+    vector<string> findItinerary(vector<pair<string, string>> tickets) {
+        priority_queue<vector<string>> q;
+        backtrack("JFK", vector<string>(), tickets, q);
+        while (q.size() > 1) q.pop();
+        return q.top();
+    }
+};

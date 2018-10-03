@@ -1,0 +1,51 @@
+DP
+
+class Solution {
+
+public:
+    bool isInterleave(string s1, string s2, string s3) {
+        if (s1.size() == 0 || s2.size() == 0) return s1 == s3 || s2 == s3;
+        if (s1.size() + s2.size() != s3.size()) return false;
+        vector<vector<bool>> dp (s1.size() + 1, vector<bool> (s2.size() + 1, false));
+        dp[0][0] = true;
+        for (int i = 0; i < dp.size(); ++i){
+            for (int j = 0; j < dp[0].size(); ++j){
+                if(dp[i][j]){
+                    // s1 has i letters, s2 has j letters, in total i + j letters in s3
+                    // next one: try right and down
+                    if (i < dp.size() - 1 && s1[i] == s3[i + j]) dp[i + 1][j] = true;
+                    if (j < dp[0].size() - 1 && s2[j] == s3[i + j]) dp[i][j + 1] = true;
+                }
+            }
+        }
+        return dp[s1.size()][s2.size()];
+    }
+};
+
+DP + dfs
+
+class Solution {
+private:
+    void dfs(vector<vector<bool>>& dp, int i, int j, string s1, string s2, string s3){
+        if (dp[i][j] == false){
+            dp[i][j] = true;
+            // check neighbors: right or down
+            if (i != dp.size() - 1){
+                // try go down
+                if (s1[i] == s3[i + j]) dfs(dp, i + 1, j, s1, s2, s3);
+            }
+            if (j != dp[0].size() - 1){
+                if (s2[j] == s3[i + j]) dfs(dp, i, j + 1, s1, s2, s3);
+            }
+        }
+        return;
+    }
+public:
+    bool isInterleave(string s1, string s2, string s3) {
+        if (s1.size() == 0 || s2.size() == 0) return s1 == s3 || s2 == s3;
+        if (s1.size() + s2.size() != s3.size()) return false;
+        vector<vector<bool>> dp (s1.size() + 1, vector<bool> (s2.size() + 1, false));
+        dfs(dp, 0, 0, s1, s2, s3);
+        return dp[s1.size()][s2.size()];
+    }
+};

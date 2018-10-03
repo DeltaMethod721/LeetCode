@@ -1,0 +1,22 @@
+class Solution {
+private:
+    void helper(vector<vector<int>>& result, vector<int> current, int start, int target, int round){
+        for (int i = start; i < 10; ++i){
+            current.push_back(i);
+            if (target == i && round == 1){
+                result.push_back(current);
+            }else if(target > i && round > 1){
+                helper(result, current, i + 1, target - i, round - 1);
+            }
+            current.pop_back();
+        }
+    }
+public:
+    vector<vector<int>> combinationSum3(int k, int n) {
+        vector<vector<int>> result;
+        if (k == 0) return result;
+        vector<int> current;
+        helper(result, current, 1, n, k);
+        return result;
+    }
+};

@@ -1,0 +1,29 @@
+class Solution {
+private:
+    int Helper(vector<int> nums){
+        if (nums.empty()) return 0;
+        if (nums.size() == 1) return nums[0];
+       
+        vector<int> temp;
+        int result = 0;
+        // if burst the first balloon
+        temp = nums;
+        temp.erase(temp.begin());
+        result = max(result, nums[0] * nums[1] + Helper(temp));
+        // if burst the last balloon
+        temp = nums;
+        temp.erase(temp.end() - 1);
+        result = max(result, nums[nums.size() - 1] * nums[nums.size() - 2] + Helper(temp));
+        // rest
+        for (int i = 1; i < nums.size() - 1; ++i){
+            temp = nums;
+            temp.erase(temp.begin() + i);
+            result = max(result, nums[i] * nums[i + 1] * nums[i - 1] + Helper(temp));
+        }
+        return result;
+    }
+public:
+    int maxCoins(vector<int>& nums) {
+        return Helper(nums);
+    }
+};

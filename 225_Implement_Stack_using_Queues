@@ -1,0 +1,56 @@
+class MyStack {
+private:
+    queue<int> s;
+    // first is last, second is first
+public:
+    /** Initialize your data structure here. */
+    MyStack() {
+        
+    }
+    
+    /** Push element x onto stack. */
+    void push(int x) {
+        int last1 = s.front();
+        s.pop();
+        // now, 1 to n - 1 queue
+        s.push(last1);
+        s.push(x);
+        // now, 1 to n + 1 queue
+        int size = s.size();
+        for (int i = 0; i < size - 1; ++i){
+            s.push(s.front());
+            s.pop();
+        }
+    }
+    
+    /** Removes the element on top of the stack and returns that element. */
+    int pop() {
+        int result = s.front();
+        s.pop();
+        int size = s.size();
+        for (int i = 0; i < size - 1; ++i){
+            s.push(s.front());
+            s.pop();
+        }
+        return result;
+    }
+    
+    /** Get the top element. */
+    int top() {
+        return s.front();
+    }
+    
+    /** Returns whether the stack is empty. */
+    bool empty() {
+        return s.empty();
+    }
+};
+
+/**
+ * Your MyStack object will be instantiated and called as such:
+ * MyStack obj = new MyStack();
+ * obj.push(x);
+ * int param_2 = obj.pop();
+ * int param_3 = obj.top();
+ * bool param_4 = obj.empty();
+ */

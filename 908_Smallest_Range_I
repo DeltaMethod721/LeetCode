@@ -1,0 +1,11 @@
+class Solution {
+public:
+    int smallestRangeI(vector<int>& A, int K) {
+        int maxnum = A[0], minnum = A[0];
+        for (int i = 0; i < A.size(); ++i){
+            maxnum = max(maxnum, A[i]);
+            minnum = min(minnum, A[i]);
+        }
+        return max(0, maxnum - minnum - 2 * K);
+    }
+};

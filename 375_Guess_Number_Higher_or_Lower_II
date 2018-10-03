@@ -1,0 +1,25 @@
+class Solution {
+
+public:
+    int getMoneyAmount(int n) {
+        vector<vector<int>> DP(n + 1, vector<int>(n + 1, 0));
+        for (int i = 0; i < n; ++i){
+            DP[i][i + 1] = i;
+        }
+        for (int i = 0; i < n - 1; ++i){
+            DP[i][i + 2] = i + 1;
+        }
+        for (int len = 3; len <= n; ++len){
+            for (int i = 1; i <= n - len; ++i){
+                int result = min(i + DP[i + 1][i + len], i + len + DP[i][i + len - 1]), temp;
+                for (int j = i + 1; j <= i + len - 1; ++j){
+                    temp = j + max(DP[i][j - 1], DP[j + 1][i + len]);
+                    if (temp < result) result = temp;
+                }
+                DP[i][i + len] = result;
+            }
+        }
+    
+        return DP[1][n];
+    }
+};

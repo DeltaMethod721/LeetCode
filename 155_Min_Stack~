@@ -1,0 +1,80 @@
+class MinStack {
+private:
+    vector<int> s;
+public:
+    /** initialize your data structure here. */
+    MinStack() {
+        
+    }
+    
+    void push(int x) {
+        s.insert(s.begin(), x);
+    }
+    
+    void pop() {
+        s.erase(s.begin());
+    }
+    
+    int top() {
+        return s[0];
+    }
+    
+    int getMin() {
+        if (s.empty()) return -1;
+        int result = s[0];
+        for (int i = 0; i < s.size(); ++i)
+            result = min(result, s[i]);
+        return result;
+    }
+};
+
+/**
+ * Your MinStack object will be instantiated and called as such:
+ * MinStack obj = new MinStack();
+ * obj.push(x);
+ * obj.pop();
+ * int param_3 = obj.top();
+ * int param_4 = obj.getMin();
+ */
+
+class MinStack {
+private:
+    vector<int> s;
+    vector<int> min_s;
+public:
+    /** initialize your data structure here. */
+    MinStack() {
+        
+    }
+    
+    void push(int x) {
+        s.insert(s.begin(), x);
+        if (s.size() == 1)
+            min_s.push_back(x);
+        else
+            min_s.insert(min_s.begin(), min(x, min_s[0]));
+    }
+    
+    void pop() {
+        s.erase(s.begin());
+        min_s.erase(min_s.begin());
+    }
+    
+    int top() {
+        return s[0];
+    }
+    
+    int getMin() {
+        return min_s[0];
+    }
+};
+
+/**
+ * Your MinStack object will be instantiated and called as such:
+ * MinStack obj = new MinStack();
+ * obj.push(x);
+ * obj.pop();
+ * int param_3 = obj.top();
+ * int param_4 = obj.getMin();
+ */
+

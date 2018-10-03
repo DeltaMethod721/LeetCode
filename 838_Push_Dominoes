@@ -1,0 +1,49 @@
+class Solution {
+public:
+    string pushDominoes(string dominoes) {
+        // push R-L pattern
+        int current = 0;
+        int momentum = 0;
+        while (current < dominoes.size()){
+            if (dominoes[current] == 'L'){
+                int temp = current;
+                if (momentum == 0){
+                    temp--;
+                    while (temp >= 0 && dominoes[temp] == '.'){
+                        dominoes[temp] = 'L';
+                        temp--;
+                    }
+                }else{
+                    int stop = momentum / 2 + 2;
+                    if (momentum % 2 == 0){
+                        temp--;
+                        while (momentum >= stop){
+                            dominoes[temp] = 'L';
+                            momentum--;
+                            temp--;
+                        }
+                        dominoes[temp] = '.';
+                    }else{
+                        temp--;
+                        while (momentum >= stop){
+                            dominoes[temp] = 'L';
+                            momentum--;
+                            temp--;
+                        }
+                    }
+                    momentum = 0;
+                }
+            }else if (dominoes[current] == 'R'){
+                // push down the following cards
+                momentum = 1;
+                while (dominoes[++current] == '.'){
+                    // current is the one that need to be pushed
+                    dominoes[current] = 'R'; momentum++;
+                }
+                current--;
+            }
+            current++;
+        }
+        return dominoes;
+    }
+};

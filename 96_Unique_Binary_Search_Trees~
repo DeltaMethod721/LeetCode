@@ -1,0 +1,19 @@
+class Solution {
+private:
+    int numSubtrees(int start, int end){
+        if (start >= end) return 1;
+        int result = 0;
+        // chose from start to end as root:
+        for (int root = start; root <= end; ++root){
+            // split it into 2 parts
+            result += numSubtrees(start, root - 1) * numSubtrees(root + 1, end);
+        }
+        return result;
+    }
+public:
+    int numTrees(int n) {
+        return numSubtrees(1, n);
+    }
+};
+
+
