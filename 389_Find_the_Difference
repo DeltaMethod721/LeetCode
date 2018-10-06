@@ -22,3 +22,21 @@ public:
         return a;
     }
 };
+
+class Solution {
+public:
+    char findTheDifference(string s, string t) {
+        char a = 0;
+        for (auto b : s) a ^= b;
+        for (auto b : t) a ^= b;
+        return a;
+    }
+};
+
+class Solution {
+public:
+    char findTheDifference(string s, string t) {
+        string concat = s + t;
+        return accumulate(concat.begin(), concat.end(), 0, bit_xor<char>());
+    }
+};
