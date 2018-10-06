@@ -9,3 +9,16 @@ public:
         }
     }
 };
+
+class Solution {
+public:
+    char findTheDifference(string s, string t) {
+        // bit manipulation
+        char a = s[0];
+        if (s.size() > 1){
+            for (int i = 1; i < s.size(); ++i) a ^= s[i];
+        }
+        for (char b : t) a ^= b;
+        return a;
+    }
+};
