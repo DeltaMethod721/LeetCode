@@ -9,3 +9,34 @@ public:
         }
     }
 };
+
+class Solution {
+public:
+    char findTheDifference(string s, string t) {
+        // bit manipulation
+        char a = s[0];
+        if (s.size() > 1){
+            for (int i = 1; i < s.size(); ++i) a ^= s[i];
+        }
+        for (char b : t) a ^= b;
+        return a;
+    }
+};
+
+class Solution {
+public:
+    char findTheDifference(string s, string t) {
+        char a = 0;
+        for (auto b : s) a ^= b;
+        for (auto b : t) a ^= b;
+        return a;
+    }
+};
+
+class Solution {
+public:
+    char findTheDifference(string s, string t) {
+        string concat = s + t;
+        return accumulate(concat.begin(), concat.end(), 0, bit_xor<char>());
+    }
+};
