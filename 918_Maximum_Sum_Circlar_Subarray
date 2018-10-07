@@ -1,0 +1,19 @@
+class Solution {
+public:
+    int maxSubarraySumCircular(vector<int>& A) {
+        int res = A[0];
+        for (int i = 0; i < A.size(); ++i){
+            // try every element of A as start
+            int current = A[i];
+            int max_current = current;
+            for (int j = 1; j < A.size(); ++j){
+                // sub-array size
+                current += A[(i + j) % A.size()];
+                max_current = max(max_current, current);
+            }
+            res = max(res, max_current);
+        }
+        return res;
+    }
+};
+
