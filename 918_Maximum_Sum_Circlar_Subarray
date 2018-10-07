@@ -17,3 +17,21 @@ public:
     }
 };
 
+
+class Solution {
+public:
+    int maxSubarraySumCircular(vector<int>& A) {
+        if (A.size() == 1) return A[0];
+        int dp = A[0], dp_min = A[0], res_max = A[0], res_min = A[0], tot = A[0], maxA = A[0];
+        for (int i = 1; i < A.size(); ++i){
+            dp = dp > 0 ? dp + A[i] : A[i];
+            res_max = max(res_max, dp);
+            dp_min = dp_min < 0 ? dp_min + A[i] : A[i];
+            res_min = min(res_min, dp_min);
+            tot += A[i];
+            maxA = max(maxA, A[i]);
+        }
+        // cout << res_max << " " << res_min << " " << tot << endl;
+        return maxA > 0 ? max(res_max, tot - res_min) : res_max;
+    }
+};
