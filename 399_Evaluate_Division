@@ -1,0 +1,128 @@
+class Solution {
+private:
+    unordered_map<string, int> ref;
+    void helper(vector<vector<double>> &graph, vector<int> history, unordered_set<int> visited, int start){
+        // search for neighbors
+        // cout << start << " " << endl;
+        for (int i = 0; i < graph.size(); ++i){
+            if (visited.find(i) == visited.end() && graph[start][i] != -1.0){
+                // now move to next and update all history
+                for (auto k : history){
+                    if (graph[k][i] == -1){
+                        cout << "Add " << k << " " << i << endl;
+                        graph[k][i] = graph[k][start] * graph[start][i];
+                        graph[i][k] = 1.0 / graph[k][i];
+                    }
+                } 
+                history.push_back(i);
+                visited.insert(i);
+                // continue the journey
+                helper(graph, history, visited, i);
+                history.pop_back(); visited.erase(i);
+            }
+        }
+    }
+public:
+    vector<double> calcEquation(vector<pair<string, string>> equations, vector<double>& values, vector<pair<string, string>> queries) {
+        int ct = 0;
+        for (auto a : equations){
+            if (ref.find(a.first) == ref.end()) ref.insert(make_pair(a.first, ct++));
+            if (ref.find(a.second) == ref.end()) ref.insert(make_pair(a.second, ct++));
+        }
+        vector<vector<double>> graph(ref.size(), vector<double>(ref.size(), -1.0));
+        ct = 0;
+        for (auto a : equations){
+            graph[ref[a.first]][ref[a.second]] = values[ct++];
+            graph[ref[a.second]][ref[a.first]] = 1.0 / graph[ref[a.first]][ref[a.second]];
+        }
+        for (int i = 0; i < graph.size(); ++i) graph[i][i] = 1.0;
+        for (int i = 0; i < graph.size(); ++i){
+            for (int j = 0; j < graph.size(); ++j){
+                cout << graph[i][j] << " ";
+            }
+            cout << endl;
+        }
+            
+        // complete the graph
+        vector<int> history;
+        unordered_set<int> visited;
+        for (int i = 0; i < graph.size(); ++i){
+            // cout << "This is " << i << endl;
+            history.push_back(i); visited.insert(i);
+            helper(graph, history, visited, i);
+            history.pop_back(); visited.clear();
+        }
+        for (int i = 0; i < graph.size(); ++i){
+            for (int j = 0; j < graph.size(); ++j){
+                cout << graph[i][j] << " ";
+            }
+            cout << endl;
+        }
+        vector<double> res;
+        for (auto a: queries){
+            if (ref.find(a.first) == ref.end() || ref.find(a.second) == ref.end()){
+                res.push_back(-1.0);
+                continue;
+            }
+            res.push_back(graph[ref[a.first]][ref[a.second]]);
+        }
+        return res;
+    }
+};
+
+
+class Solution {
+private:
+    unordered_map<string, int> ref;
+    double helper(unordered_set<int> visited, int cur, int end, vector<vector<double>> graph){
+        if (end == cur) return 1;
+        // go over all cur neighbors
+        for (int i = 0; i < graph.size(); ++i){
+            if (i != cur && visited.find(i) == visited.end() && graph[cur][i] != -1.0){
+                // unvisited neighbor
+                visited.insert(i);
+                double tmp = helper(visited, i, end, graph);
+                if (tmp != -1.0) return graph[cur][i] * tmp;
+            }
+        }
+        return -1.0;
+    }
+public:
+    vector<double> calcEquation(vector<pair<string, string>> equations, vector<double>& values, vector<pair<string, string>> queries) {
+        int ct = 0;
+        for (auto a : equations){
+            if (ref.find(a.first) == ref.end()) ref.insert(make_pair(a.first, ct++));
+            if (ref.find(a.second) == ref.end()) ref.insert(make_pair(a.second, ct++));
+        }
+        vector<vector<double>> graph(ref.size(), vector<double>(ref.size(), -1.0));
+        ct = 0;
+        for (auto a : equations){
+            graph[ref[a.first]][ref[a.second]] = values[ct++];
+            graph[ref[a.second]][ref[a.first]] = 1.0 / graph[ref[a.first]][ref[a.second]];
+        }
+        for (int i = 0; i < graph.size(); ++i) graph[i][i] = 1.0;
+        for (int i = 0; i < graph.size(); ++i){
+            for (int j = 0; j < graph.size(); ++j){
+                cout << graph[i][j] << " ";
+            }
+            cout << endl;
+        }
+        // dfs
+        vector<double> res;
+        for (auto a: queries){
+            if (ref.find(a.first) == ref.end() || ref.find(a.second) == ref.end()){
+                res.push_back(-1.0);
+                continue;
+            }
+            if (graph[ref[a.first]][ref[a.second]] != -1.0){
+                res.push_back(graph[ref[a.first]][ref[a.second]]);
+                continue;
+            }
+            // go to dfs
+            unordered_set<int> visited;
+            res.push_back(helper(visited, ref[a.first], ref[a.second], graph));
+        }
+        return res;
+    }
+};
+

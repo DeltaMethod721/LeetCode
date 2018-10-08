@@ -1,0 +1,30 @@
+class Solution {
+public:
+    int integerReplacement(int n) {
+        if (n == 1) return 0;
+        if (n % 2 == 0) return integerReplacement(n / 2) + 1;
+        if (n % 2 == 1) return min(integerReplacement(n + 1), integerReplacement(n - 1)) + 1;
+    }
+};
+
+class Solution {
+private:
+    unordered_map<int, int> hashmap;
+public:
+    int integerReplacement(int n) {
+        if (hashmap.find(n) != hashmap.end()) return hashmap[n];
+	if (n == INT_MAX) return 32;
+        if (n == 1){
+            hashmap.insert(make_pair(1, 0));
+            return 0;
+        }
+        if (n % 2 == 0){
+            hashmap.insert(make_pair(n, integerReplacement(n / 2) + 1));
+            return hashmap[n];
+        }
+        if (n % 2 == 1){
+            hashmap.insert(make_pair(n, min(integerReplacement(n + 1), integerReplacement(n - 1)) + 1));
+            return hashmap[n];
+        } 
+    }
+};
