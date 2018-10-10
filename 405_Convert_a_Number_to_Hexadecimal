@@ -1,0 +1,45 @@
+class Solution {
+private:
+    string ref = "0123456789abcdef";
+    void ascii_addone(char& a){
+        if (a == '9') a = 'a';
+        else a = a + 1;
+    }
+    void addone(string& hex){
+        cout << hex << endl;
+        ascii_addone(hex[7]);
+        for (int i = 7; i >= 0; --i){
+            if (hex[i] == 'g'){
+                hex[i] = '0';
+                ascii_addone(hex[i - 1]);
+            }else{
+                break;
+            }
+        }
+        return;
+    }
+public:
+    string toHex(int num) {
+        string res;
+        if (num == 0) return "0";
+        if (num > 0){
+            while (num > 0){
+                res = ref.substr(num % 16, 1) + res;
+                num = num / 16;
+            }
+        }else{
+            res = "ffffffff";
+            int i = 7;
+            while (num < 0){
+                res[i] = ref[15 + num % 16];
+                num = num / 16;
+                i--;
+            }
+            cout << res << endl;
+            // add one
+            addone(res);
+        }
+        return res;
+    
+    }
+};
