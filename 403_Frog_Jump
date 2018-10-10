@@ -1,0 +1,18 @@
+class Solution {
+private:
+    bool dfs(int pos, int k, unordered_set<int> rocks, int end){
+        if (pos == end) return true;
+        // k - 1
+        bool k1 = false, k2 = false, k3 = false;
+        if (k > 1 && rocks.find(pos + k - 1) != rocks.end()) k1 = dfs(pos + k - 1, k - 1, rocks, end);
+        if (rocks.find(pos + k) != rocks.end()) k2 = dfs(pos + k, k, rocks, end);
+        if (rocks.find(pos + k + 1) != rocks.end()) k3 = dfs(pos + k + 1, k + 1, rocks, end);
+        return k1 || k2 || k3;
+    }
+public:
+    bool canCross(vector<int>& stones) {
+        if (stones[1] != 1) return false;
+        unordered_set<int> rocks(stones.begin(), stones.end());
+        return dfs(1, 1, rocks, *(stones.end() - 1));
+    }
+};

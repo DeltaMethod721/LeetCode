@@ -1,0 +1,28 @@
+class Solution {
+public:
+    int findNthDigit(int n) {
+        if (n <= 9) return n;
+        // prepare level ref
+        vector<int> level(1, 0);
+        int count = 1;
+        while (count <= 8){
+            level.push_back(level[level.size() - 1] + 9 * pow(10, count - 1) * count);
+            if (n < level[level.size() - 1]) break;
+            count++;
+        } 
+        cout << count << endl;
+        // break at the level of n
+        // before this level, in total level[count - 1] digits, remaining n - level[count - 1]
+        // current level: each number has count numbers.
+        // (n - level[count - 1]) / count th number, which is pow(10, count - 1) + (n - level[count - 1]) / count
+        // in this digit, the jth number is (n - level[count - 1]) % count (if it is 0, return to the last)
+        int remain = n - level[count - 1] - 1;
+        cout << remain << endl;
+        int num = remain / count + pow(10, count - 1);
+        int j = remain % count;
+        
+        string num_string = to_string(num);
+        return num_string[j] - '0';
+        
+    }
+};

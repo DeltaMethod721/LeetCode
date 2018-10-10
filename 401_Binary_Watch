@@ -1,0 +1,38 @@
+class Solution {
+private:
+    void backtrack(vector<string> &result, int number_of_lights, vector<int> cur, int start){
+        if (number_of_lights == 0){
+            // check if valid time
+            // first 4 numbers are hours: 1, 2, 4, 8
+            // second 6 numbers are minutes: 1, 2, 4, 8, 16, 32
+            int hours = 0, minutes = 0;
+            for (int i = 0; i < 4; ++i) hours += cur[i] * pow(2, i);
+            for (int i = 4; i < 10; ++i) minutes += cur[i] * pow(2, i - 4);
+            if (hours <= 11 && minutes <= 59){
+                // prepare string:
+                string min_string = to_string(minutes);
+                if (min_string.size() == 1) min_string = "0" + min_string;
+                result.push_back(to_string(hours) + ":" + min_string);
+            }
+        }else{
+            // backtrack
+            if (start < cur.size()){
+                // choose to open or not
+                //  do nothing, pass to the next digit
+                backtrack(result, number_of_lights, cur, start + 1);
+                //  open start position
+                cur[start] = 1;
+                number_of_lights--;
+                backtrack(result, number_of_lights, cur, start + 1);
+            }
+        }
+    }
+public:
+    vector<string> readBinaryWatch(int num) {
+        // initialize
+        vector<int> cur(10, 0);
+        vector<string> result;
+        backtrack(result, num, cur, 0);
+        return result;
+    }
+};

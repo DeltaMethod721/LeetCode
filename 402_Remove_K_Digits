@@ -1,0 +1,38 @@
+class Solution {
+private:
+    void remove_one(string &num, int remain_k){
+        if (remain_k == 0) return;
+        // first check leading 0
+        while (num.size() > 0 && num[0] == '0'){
+            num.erase(0, 1);
+        }
+        if (num.size() == 0) return;
+        if (remain_k >= num.size()){
+            num = ""; return;
+        }
+        // now do the work
+        int i = 0;
+        bool del = false;
+        while (i < num.size() - 1){
+            if (num[i] > num[i + 1]){
+                // delete i
+                del = true;
+                num.erase(i, 1); break;
+            }
+            i++;
+        }
+        // if i == num.size() - 1, means all increasing, delete the last
+        if (!del) num.erase(i);
+        remove_one(num, remain_k - 1);
+    }
+public:
+    string removeKdigits(string num, int k) {
+        if (k == num.size()) return "0";
+        remove_one(num, k);
+        while (num.size() > 0 && num[0] == '0'){
+            num.erase(0, 1);
+        }
+        if (num.size() == 0) return "0";
+        return num;
+    }
+};
