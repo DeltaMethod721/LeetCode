@@ -1,0 +1,18 @@
+class Solution {
+public:
+    vector<pair<int, int>> reconstructQueue(vector<pair<int, int>>& people) {
+        vector<pair<int, int>> res;
+        priority_queue<pair<int, int>> q;
+        for (auto a : people){
+            a.second = -1 * a.second;
+            q.push(a);
+        }
+        while (!q.empty()){
+            pair<int, int> cur = q.top(); 
+            cur.second = -1 * cur.second;
+            q.pop();
+            res.insert(res.begin() + cur.second, cur);
+        }
+        return res;
+    }
+};
