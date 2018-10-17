@@ -126,28 +126,3 @@ public:
     }
 };
 
-class Solution {
-public:
-    vector<double> calcEquation(vector<pair<string, string>> equations, vector<double>& values, vector<pair<string, string>> queries) {
-        unordered_map<string, unordered_map<string, double>> dist;
-        for (int i = 0; i < equations.size(); ++i){
-            dist[equations[i].first][equations[i].second] = values[i];
-            dist[equations[i].second][equations[i].first] = 1.0 / values[i];
-            dist[equations[i].second][equations[i].second] = 1.0;
-            dist[equations[i].first][equations[i].first] = 1.0;
-        }
-        for (auto k : dist)
-            for (auto i : dist[k.first])
-                for (auto j : dist[k.first])
-                    dist[i.first][j.first] = dist[i.first][k.first] * dist[k.first][j.first];
-        vector<double> res;
-        for (auto q : queries){
-            if (dist.find(q.first) != dist.end() && dist[q.first].find(q.second) != dist[q.first].end())
-                res.push_back(dist[q.first][q.second]);
-            else
-                res.push_back(-1.0);
-        }
-        return res;
-    }
-};
-
